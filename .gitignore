@@ -45,3 +45,9 @@
 
 node_modules
 node_modules/*
+
+core/epidemy.js
+core/epidemy.wasm
+
+public/epidemy.js
+public/epidemy.wasm

@@ -1,0 +1,16 @@
+import createModule from './epidemy.js';
+
+const Module = await createModule({
+    locateFile: (p) => p, // ensures it finds epidemy.wasm next to epidemy.js
+    print: (s) => (document.getElementById('out').textContent += s + '\n'),
+    printErr: (s) => console.error(s),
+});
+
+// Wrap exported C functions
+export const create_simulator = Module.cwrap('create_simulator', null, ["number", "number"]);
+export const add_random_agents = Module.cwrap('add_random_agents', null, ["number", "number"]);
+export const getAgentX = Module.cwrap('getAgentX', "number", ["number"]);
+export const getAgentY = Module.cwrap('getAgentY', "number", ["number"]);
+export const getAgentSpeedX = Module.cwrap('getAgentSpeedX', "number", ["number"]);
+export const getAgentSpeedY = Module.cwrap('getAgentSpeedY', "number", ["number"]);
+export const getNumberOfAgents = Module.cwrap('getNumberOfAgents', "number", []);

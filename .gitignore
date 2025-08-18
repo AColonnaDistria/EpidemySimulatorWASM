@@ -47,3 +47,4 @@ common
 epidemy
 main
 vector2d
+*.wasm

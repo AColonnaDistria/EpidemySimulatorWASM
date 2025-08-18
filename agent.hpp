@@ -11,6 +11,9 @@ class Agent {
 public:
     Agent(Vector2d position);
     Agent(Vector2d position, Vector2d speedPerSecond);
+
+    Vector2d getPosition();
+    Vector2d getSpeedPerSeconds();
 };
 
 #endif

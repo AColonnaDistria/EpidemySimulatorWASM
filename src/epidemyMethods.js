@@ -1,7 +1,8 @@
-import createModule from './epidemy.js';
+import createModule from './wasm/epidemy.js';
+import wasmUrl from './wasm/epidemy.wasm?url';
 
 const Module = await createModule({
-    locateFile: (p) => p, // ensures it finds epidemy.wasm next to epidemy.js
+    locateFile: () =>  wasmUrl,
     print: (s) => (document.getElementById('out').textContent += s + '\n'),
     printErr: (s) => console.error(s),
 });

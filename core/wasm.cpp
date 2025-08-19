@@ -33,4 +33,8 @@ extern "C" {
     EMSCRIPTEN_KEEPALIVE double getAgentSpeedY(int index) {
         return simulator->getAgent(index).getSpeedPerSeconds().getY();
     }
+
+    EMSCRIPTEN_KEEPALIVE void step(double timeInSeconds) {
+        return simulator->step(timeInSeconds);
+    }
 }

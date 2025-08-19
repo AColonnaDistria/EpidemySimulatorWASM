@@ -48,3 +48,9 @@ Agent EpidemySimulator::getAgent(int index) {
 int EpidemySimulator::getNumberOfAgents() {
     return this->agents.size();
 }
+
+void EpidemySimulator::step(double timeInSeconds) {
+    for (auto& agent: agents) {
+        agent.step(timeInSeconds);
+    }
+}

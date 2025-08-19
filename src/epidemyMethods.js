@@ -15,3 +15,4 @@ export const getAgentY = Module.cwrap('getAgentY', "number", ["number"]);
 export const getAgentSpeedX = Module.cwrap('getAgentSpeedX', "number", ["number"]);
 export const getAgentSpeedY = Module.cwrap('getAgentSpeedY', "number", ["number"]);
 export const getNumberOfAgents = Module.cwrap('getNumberOfAgents', "number", []);
+export const step = Module.cwrap('step', null, ["number"]);

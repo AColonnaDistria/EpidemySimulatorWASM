@@ -14,6 +14,8 @@ public:
 
     Vector2d getPosition();
     Vector2d getSpeedPerSeconds();
+
+    void step(double time);
 };
 
 #endif

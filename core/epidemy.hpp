@@ -16,6 +16,7 @@ private:
 public:
     EpidemySimulator(Vector2d boxSize);
     void addRandomAgents(int numberOfAgents, double maxSpeedPerSeconds);
+    void step(double timeInSeconds);
 
     Agent getAgent(int index);
     int getNumberOfAgents();

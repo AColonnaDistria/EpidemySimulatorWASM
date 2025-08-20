@@ -2,6 +2,7 @@
 #define COMMON_HPP
 
 #include <iostream>
+#include <cmath>
 
 #define CHECK_BOUNDS
 

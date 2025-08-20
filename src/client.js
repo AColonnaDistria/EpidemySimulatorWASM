@@ -34,7 +34,9 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
     }
 
     // Listen for animate update
-    app.ticker.add((time) => {
+    app.ticker.add((ticker) => {
+        epidemy.step(ticker.deltaTime);
+
         for (let index = 0; index < numberOfAgents; index++) {
             sprites[index].x = epidemy.getAgentX(index);
             sprites[index].y = epidemy.getAgentY(index);

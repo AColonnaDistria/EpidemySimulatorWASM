@@ -13,6 +13,21 @@ Agent::Agent(Vector2d position, Vector2d speedPerSecond) {
     this->speedPerSecond = speedPerSecond;
 }
 
+Agent::Agent(Vector2d position, AgentState state) {
+    this->position = position;
+
+    this->state = state;
+    this->stateBuffer = state;
+}
+
+Agent::Agent(Vector2d position, Vector2d speedPerSecond, AgentState state) {
+    this->position = position;
+    this->speedPerSecond = speedPerSecond;
+
+    this->state = state;
+    this->stateBuffer = state;
+}
+
 Vector2d Agent::getPosition() {
     return this->position;
 }
@@ -22,6 +37,9 @@ Vector2d Agent::getSpeedPerSeconds() {
 }
 
 void Agent::step(double timeInSeconds, Vector2d bounds) {
+    this->state = this->stateBuffer;
+
+    // move
     double xspeed = this->speedPerSecond.getX();
     double yspeed = this->speedPerSecond.getY();
 
@@ -66,4 +84,20 @@ void Agent::step(double timeInSeconds, Vector2d bounds) {
 
     this->position.setX(x2);
     this->position.setY(y2);
+}
+
+AgentState Agent::getState() {
+    return this->state;
+}
+
+void Agent::infected() {
+    this->stateBuffer = AgentState::AGENT_INFECTED;
+}
+
+void Agent::heal(bool immunity) {
+    this->stateBuffer = (immunity ? AgentState::AGENT_IMMUNE : AgentState::AGENT_HEALTHY);
+}
+
+void Agent::die() {
+    this->stateBuffer = AgentState::AGENT_DEAD;
 }

@@ -36,3 +36,7 @@ Vector2d Vector2d::operator +(Vector2d& right) {
 Vector2d Vector2d::operator -(Vector2d& right) {
     return Vector2d(this->x - right.x, this->y - right.y);
 }
+
+double Vector2d::distance(Vector2d left, Vector2d right) {
+    return sqrt((left.getX() - right.getX()) * (left.getX() - right.getX()) + (left.getY() - right.getY()) * (left.getY() - right.getY()));
+}

@@ -10,8 +10,8 @@ extern "C" {
         simulator = new EpidemySimulator(Vector2d(width, height));
     }
 
-    EMSCRIPTEN_KEEPALIVE void add_random_agents(int numberOfAgents, double maxSpeedPerSeconds) {
-        simulator->addRandomAgents(numberOfAgents, maxSpeedPerSeconds);
+    EMSCRIPTEN_KEEPALIVE void add_random_agents(int numberOfAgents, double maxSpeedPerSeconds, int numberOfInfected, int numberOfImmune) {
+        simulator->addRandomAgents(numberOfAgents, maxSpeedPerSeconds, numberOfInfected, numberOfImmune);
     }
 
     EMSCRIPTEN_KEEPALIVE int getNumberOfAgents() {
@@ -32,6 +32,10 @@ extern "C" {
 
     EMSCRIPTEN_KEEPALIVE double getAgentSpeedY(int index) {
         return simulator->getAgent(index).getSpeedPerSeconds().getY();
+    }
+
+    EMSCRIPTEN_KEEPALIVE int getAgentState(int index) {
+        return (int)simulator->getAgent(index).getState();
     }
 
     EMSCRIPTEN_KEEPALIVE void step(double timeInSeconds) {

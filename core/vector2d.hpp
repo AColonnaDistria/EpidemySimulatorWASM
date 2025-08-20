@@ -18,6 +18,8 @@ public:
     double getY();
     void setY(double y);
 
+    static double distance(Vector2d left, Vector2d right);
+
     Vector2d operator +(Vector2d& right);
     Vector2d operator -(Vector2d& right);
 };

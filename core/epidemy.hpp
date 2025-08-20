@@ -4,18 +4,19 @@
 #include "common.hpp"
 #include "agent.hpp"
 #include "vector2d.hpp"
+#include "virus_characteristics.hpp"
 
 #include <vector>
 
 class EpidemySimulator {
     std::vector<Agent> agents;
     Vector2d boxSize;
-private:
-    void setupRandomGenerator();
-    
+    VirusCharacteristics virusCharacteristics;
+
+    double timeTriggerContaminationStep;
 public:
     EpidemySimulator(Vector2d boxSize);
-    void addRandomAgents(int numberOfAgents, double maxSpeedPerSeconds);
+    void addRandomAgents(int numberOfAgents, double maxSpeedPerSeconds, int numberOfInfectedAgents = 0, int numberOfImmuneAgents = 0);
     void step(double timeInSeconds);
 
     Agent getAgent(int index);

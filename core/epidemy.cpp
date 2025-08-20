@@ -7,15 +7,15 @@
 
 #include "common.hpp"
 
-#define P_CONTAMINATION 0.1
-#define CONTAMINATION_RADIUS 10.0
+//#define P_CONTAMINATION 0.25
+//#define CONTAMINATION_RADIUS 30.0
 #define TIME_CONTAMINATION_TRIGGER 0.1
 
-EpidemySimulator::EpidemySimulator(Vector2d boxSize) {
+EpidemySimulator::EpidemySimulator(Vector2d boxSize, VirusCharacteristics virus) {
     this->timeTriggerContaminationStep = 0.0;
     this->boxSize = boxSize;
 
-    this->virusCharacteristics = VirusCharacteristics(P_CONTAMINATION);
+    this->virusCharacteristics = virus;
 }
 
 void EpidemySimulator::addRandomAgents(int numberOfAgents, double maxSpeedPerSeconds, int numberOfInfectedAgents, int numberOfImmuneAgents) {
@@ -83,7 +83,7 @@ void EpidemySimulator::step(double timeInSeconds) {
                         // if A is infected and B is healthy then there is a p_contamination probability that a contamination happens
                         if (agents[i].getState() == AgentState::AGENT_INFECTED 
                         && agents[j].getState() == AgentState::AGENT_HEALTHY 
-                        && (Vector2d::distance(agents[i].getPosition(), agents[j].getPosition()) <= CONTAMINATION_RADIUS)
+                        && (Vector2d::distance(agents[i].getPosition(), agents[j].getPosition()) <= this->virusCharacteristics.get_radius_contamination())
                         && rnd(mt) <= this->virusCharacteristics.get_p_contamination()) {
                             agents[j].infected();
                         }

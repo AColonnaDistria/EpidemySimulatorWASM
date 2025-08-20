@@ -8,7 +8,7 @@ const Module = await createModule({
 });
 
 // Wrap exported C functions
-export const create_simulator = Module.cwrap('create_simulator', null, ["number", "number"]);
+export const create_simulator = Module.cwrap('create_simulator', null, ["number", "number", "number", "number"]);
 export const add_random_agents = Module.cwrap('add_random_agents', null, ["number", "number", "number", "number"]);
 export const getAgentX = Module.cwrap('getAgentX', "number", ["number"]);
 export const getAgentY = Module.cwrap('getAgentY', "number", ["number"]);

@@ -6,8 +6,8 @@
 static EpidemySimulator* simulator = nullptr;
 
 extern "C" {
-    EMSCRIPTEN_KEEPALIVE void create_simulator(double width, double height) {
-        simulator = new EpidemySimulator(Vector2d(width, height));
+    EMSCRIPTEN_KEEPALIVE void create_simulator(double width, double height, double p_contamination, double radius_contamination) {
+        simulator = new EpidemySimulator(Vector2d(width, height), VirusCharacteristics(p_contamination, radius_contamination));
     }
 
     EMSCRIPTEN_KEEPALIVE void add_random_agents(int numberOfAgents, double maxSpeedPerSeconds, int numberOfInfected, int numberOfImmune) {

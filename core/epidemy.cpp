@@ -89,6 +89,24 @@ void EpidemySimulator::step(double timeInSeconds) {
                         }
                     }
                 }
+
+                if (agents[i].getState() == AgentState::AGENT_INFECTED) {
+                    double r = rnd(mt);
+                    // heal/immune/death
+
+                    if (r <= this->virusCharacteristics.get_p_heal()) {
+                        // heals
+                        agents[i].heal(false);
+                    }
+                    else if (r <= this->virusCharacteristics.get_p_immune() + this->virusCharacteristics.get_p_heal()) {
+                        // gets immunized
+                        agents[i].heal(true);
+                    }
+                    else if (r <= this->virusCharacteristics.get_p_death() + this->virusCharacteristics.get_p_immune() + this->virusCharacteristics.get_p_heal()) {
+                        // dies
+                        agents[i].die();
+                    }
+                }
             }
         }
     }

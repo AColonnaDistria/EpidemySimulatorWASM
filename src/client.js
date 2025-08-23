@@ -14,8 +14,8 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
         [AGENT_DEAD]:    0xc4c4c4,
     };
 
-    epidemy.create_simulator(500.0, 500.0, 0.25, 30.0);
-    epidemy.add_random_agents(20, 150.0, 10, 2);
+    epidemy.create_simulator(500.0, 500.0, 0.05, 30.0);
+    epidemy.add_random_agents(50, 150.0, 10, 2);
 
     const app = new Application();
     await app.init({ background: 'white', resizeTo: window });

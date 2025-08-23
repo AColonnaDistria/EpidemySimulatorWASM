@@ -12,15 +12,17 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
         [AGENT_INFECTED]: 0x008000,
         [AGENT_IMMUNE]:  0xffc0cb,
         [AGENT_DEAD]:    0xc4c4c4,
-    };
+    }
+
+    const epidemy_container = document.getElementById("epidemy_container");
 
     epidemy.create_simulator(500.0, 500.0, 0.05, 30.0);
     epidemy.add_random_agents(50, 150.0, 10, 2);
 
     const app = new Application();
-    await app.init({ background: 'white', resizeTo: window });
+    await app.init({ background: 'white', resizeTo: epidemy_container });
 
-    document.body.appendChild(app.canvas);
+    epidemy_container.appendChild(app.canvas);
     const container = new Container();
     app.stage.addChild(container);
 

@@ -2,34 +2,40 @@
 #define AGENT_HPP
 
 #include "common.hpp"
-#include "vector2d.hpp"
 
-enum class AgentState {
-    AGENT_HEALTHY,
-    AGENT_INFECTED,
-    AGENT_IMMUNE,
-    AGENT_DEAD
+enum AgentState {
+    AGENT_HEALTHY = 0,
+    AGENT_INFECTED = 1,
+    AGENT_IMMUNE = 2,
+    AGENT_DEAD = 3
 };
 
+// Flat Agent
 class Agent {
-    Vector2d position;
-    Vector2d speedPerSecond;
+    double x;
+    double y;
 
-    AgentState state;
-    AgentState stateBuffer;
+    double vx;
+    double vy;
+
+    double state;
+    double stateBuffer;
 public:
-    Agent(Vector2d position);
-    Agent(Vector2d position, Vector2d speedPerSecond);
+    Agent(double x, double y);
+    Agent(double x, double y, double vx, double vy);
 
-    Agent(Vector2d position, AgentState state);
-    Agent(Vector2d position, Vector2d speedPerSecond, AgentState state);
+    Agent(double x, double y, AgentState state);
+    Agent(double x, double y, double vx, double vy, AgentState state);
 
-    Vector2d getPosition();
-    Vector2d getSpeedPerSeconds();
+    double getPositionX();
+    double getPositionY();
+
+    double getSpeedX();
+    double getSpeedY();
 
     AgentState getState();
 
-    void step(double time, Vector2d bounds);
+    void step(double time, double bounds_width, double bounds_height);
 
     void infected();
     void immune();

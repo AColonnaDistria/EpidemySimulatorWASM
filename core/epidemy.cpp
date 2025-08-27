@@ -2,7 +2,6 @@
 
 #include "epidemy.hpp"
 #include "agent.hpp"
-#include "vector2d.hpp"
 #include "virus_characteristics.hpp"
 
 #include "common.hpp"
@@ -11,9 +10,10 @@
 //#define CONTAMINATION_RADIUS 30.0
 #define TIME_CONTAMINATION_TRIGGER 0.1
 
-EpidemySimulator::EpidemySimulator(Vector2d boxSize, VirusCharacteristics virus) {
+EpidemySimulator::EpidemySimulator(double boxSize_width, double boxSize_height, VirusCharacteristics virus) {
     this->timeTriggerContaminationStep = 0.0;
-    this->boxSize = boxSize;
+    this->boxSize_width = boxSize_width;
+    this->boxSize_height = boxSize_height;
 
     this->virusCharacteristics = virus;
 }
@@ -24,8 +24,8 @@ void EpidemySimulator::addRandomAgents(int numberOfAgents, double maxSpeedPerSec
     std::uniform_real_distribution<double> rnAngle(-MATH_PI, MATH_PI);
     std::uniform_real_distribution<double> rnSpeed(maxSpeedPerSeconds * 0.75, maxSpeedPerSeconds);
 
-    std::uniform_real_distribution<double> rnPositionX(0.0, boxSize.getX());
-    std::uniform_real_distribution<double> rnPositionY(0.0, boxSize.getY());
+    std::uniform_real_distribution<double> rnPositionX(0.0, this->boxSize_width);
+    std::uniform_real_distribution<double> rnPositionY(0.0, this->boxSize_height);
     
     for (int i = 0; i < numberOfAgents; ++i) {
         double angle = rnAngle(mt);
@@ -34,8 +34,8 @@ void EpidemySimulator::addRandomAgents(int numberOfAgents, double maxSpeedPerSec
         double x = rnPositionX(mt);
         double y = rnPositionY(mt);
 
-        Vector2d position(x, y);
-        Vector2d speedVectorPerSeconds(cos(angle) * speed, sin(angle) * speed);
+        double vx = cos(angle) * speed;
+        double vy = sin(angle) * speed;
 
         AgentState state = AgentState::AGENT_HEALTHY;
 
@@ -44,7 +44,7 @@ void EpidemySimulator::addRandomAgents(int numberOfAgents, double maxSpeedPerSec
         else if (i <= numberOfInfectedAgents + numberOfImmuneAgents)
             state = AgentState::AGENT_IMMUNE;
 
-        this->agents.push_back(Agent(position, speedVectorPerSeconds, state));
+        this->agents.push_back(Agent(x, y, vx, vy, state));
     }
 }
 
@@ -57,6 +57,10 @@ Agent EpidemySimulator::getAgent(int index) {
     #endif
 
     return this->agents[index];
+}
+
+std::vector<Agent>& EpidemySimulator::getAgents() {
+    return this->agents;
 }
 
 int EpidemySimulator::getNumberOfAgents() {
@@ -83,7 +87,7 @@ void EpidemySimulator::step(double timeInSeconds) {
                         // if A is infected and B is healthy then there is a p_contamination probability that a contamination happens
                         if (agents[i].getState() == AgentState::AGENT_INFECTED 
                         && agents[j].getState() == AgentState::AGENT_HEALTHY 
-                        && (Vector2d::distance(agents[i].getPosition(), agents[j].getPosition()) <= this->virusCharacteristics.get_radius_contamination())
+                        && (distance(agents[i].getPositionX(), agents[i].getPositionY(), agents[j].getPositionX(), agents[j].getPositionY()) <= this->virusCharacteristics.get_radius_contamination())
                         && rnd(mt) <= this->virusCharacteristics.get_p_contamination()) {
                             agents[j].infected();
                         }
@@ -112,6 +116,6 @@ void EpidemySimulator::step(double timeInSeconds) {
     }
     // advance and apply infections
     for (auto& agent: agents) {
-        agent.step(timeInSeconds, this->boxSize);
+        agent.step(timeInSeconds, this->boxSize_width, this->boxSize_height);
     }
 }

@@ -1,47 +1,68 @@
 #include "common.hpp"
 #include "agent.hpp"
-#include "vector2d.hpp"
 
 #include <random>
 
-Agent::Agent(Vector2d position) {
-    this->position = position;
+Agent::Agent(double x, double y) {
+    this->x = x;
+    this->y = y;
+
+    this->vx = 0.0;
+    this->vy = 0.0;
 }
 
-Agent::Agent(Vector2d position, Vector2d speedPerSecond) {
-    this->position = position;
-    this->speedPerSecond = speedPerSecond;
+Agent::Agent(double x, double y, double vx, double vy) {
+    this->x = x;
+    this->y = y;
+
+    this->vx = vx;
+    this->vy = vy;
 }
 
-Agent::Agent(Vector2d position, AgentState state) {
-    this->position = position;
+Agent::Agent(double x, double y, AgentState state) {
+    this->x = x;
+    this->y = y;
 
-    this->state = state;
-    this->stateBuffer = state;
+    this->vx = 0.0;
+    this->vy = 0.0;
+
+    this->state = (AgentState) state;
+    this->stateBuffer = this->state;
 }
 
-Agent::Agent(Vector2d position, Vector2d speedPerSecond, AgentState state) {
-    this->position = position;
-    this->speedPerSecond = speedPerSecond;
+Agent::Agent(double x, double y, double vx, double vy, AgentState state) {
+    this->x = x;
+    this->y = y;
 
-    this->state = state;
-    this->stateBuffer = state;
+    this->vx = vx;
+    this->vy = vy;
+
+    this->state = (AgentState) state;
+    this->stateBuffer = this->state;
 }
 
-Vector2d Agent::getPosition() {
-    return this->position;
+double Agent::getPositionX() {
+    return this->x;
 }
 
-Vector2d Agent::getSpeedPerSeconds() {
-    return this->speedPerSecond;
+double Agent::getPositionY() {
+    return this->y;
 }
 
-void Agent::step(double timeInSeconds, Vector2d bounds) {
+double Agent::getSpeedX() {
+    return this->vx;
+}
+
+double Agent::getSpeedY() {
+    return this->vy;
+}
+
+void Agent::step(double timeInSeconds, double bounds_x, double bounds_y) {
     this->state = this->stateBuffer;
 
     // move
-    double xspeed = this->speedPerSecond.getX();
-    double yspeed = this->speedPerSecond.getY();
+    double xspeed = this->vx;
+    double yspeed = this->vy;
 
     double speed = sqrt(xspeed * xspeed + yspeed * yspeed);
     double angle = atan2(yspeed, xspeed);
@@ -55,8 +76,8 @@ void Agent::step(double timeInSeconds, Vector2d bounds) {
     xspeed = cos(angle) * speed;
     yspeed = sin(angle) * speed;
 
-    double x2 = this->position.getX() + xspeed * timeInSeconds;
-    double y2 = this->position.getY() + yspeed * timeInSeconds;
+    double x2 = this->x + xspeed * timeInSeconds;
+    double y2 = this->y + yspeed * timeInSeconds;
 
     if (x2 < 0)
     {
@@ -68,36 +89,36 @@ void Agent::step(double timeInSeconds, Vector2d bounds) {
         yspeed *= -1.0;
         y2 = 1.0;
     }
-    if (x2 >= bounds.getX())
+    if (x2 >= bounds_x)
     {
         xspeed *= -1.0;
-        x2 = bounds.getX() - 1.0;
+        x2 = bounds_x - 1.0;
     }
-    if (y2 >= bounds.getY())
+    if (y2 >= bounds_y)
     {
         yspeed *= -1.0;
-        y2 = bounds.getY() - 1.0;
+        y2 = bounds_y - 1.0;
     }
 
-    this->speedPerSecond.setX(xspeed);
-    this->speedPerSecond.setY(yspeed);
+    this->vx = xspeed;
+    this->vy = yspeed;
 
-    this->position.setX(x2);
-    this->position.setY(y2);
+    this->x = x2;
+    this->y = y2;
 }
 
 AgentState Agent::getState() {
-    return this->state;
+    return (AgentState) this->state;
 }
 
 void Agent::infected() {
-    this->stateBuffer = AgentState::AGENT_INFECTED;
+    this->stateBuffer = (int) AgentState::AGENT_INFECTED;
 }
 
 void Agent::heal(bool immunity) {
-    this->stateBuffer = (immunity ? AgentState::AGENT_IMMUNE : AgentState::AGENT_HEALTHY);
+    this->stateBuffer = (int) (immunity ? AgentState::AGENT_IMMUNE : AgentState::AGENT_HEALTHY);
 }
 
 void Agent::die() {
-    this->stateBuffer = AgentState::AGENT_DEAD;
+    this->stateBuffer = (int) AgentState::AGENT_DEAD;
 }

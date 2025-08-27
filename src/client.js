@@ -16,7 +16,7 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
         P_HEAL: 0.05,
         P_DEATH: 0.001,
         P_IMMUNE: 0.005,
-        NUMBER_OF_AGENTS: 500,
+        NUMBER_OF_AGENTS: 5000,
         AGENTS_SPEED_PER_SECONDS: 150.0,
         NUMBER_OF_INFECTED: 10,
         NUMBER_OF_IMMUNE: 2

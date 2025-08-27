@@ -71,9 +71,9 @@ int EpidemySimulator::getNumberOfAgents() {
     return this->agents.size();
 }
 
-void EpidemySimulator::tryInfect(Agent& agent1, Agent& agent2, std::mt19937 &mt, std::uniform_real_distribution<double> &rnd) {
+void EpidemySimulator::tryInfect(Agent& agent1, Agent& agent2, int n, std::mt19937 &mt, std::uniform_real_distribution<double> &rnd) {
+    if (rnd(mt) > this->virusCharacteristics.get_p_contamination(n)) return; // clause 4
     if (agent2.getNextState() != AgentState::AGENT_HEALTHY) return; // clause 2.5
-    if (rnd(mt) > this->virusCharacteristics.get_p_contamination()) return; // clause 4
     if (agent2.getState() != AgentState::AGENT_HEALTHY) return; // clause 2
     if (distance(agent1.getPositionX(), agent1.getPositionY(), 
                  agent2.getPositionX(), agent2.getPositionY())
@@ -83,7 +83,7 @@ void EpidemySimulator::tryInfect(Agent& agent1, Agent& agent2, std::mt19937 &mt,
     agent2.infected();
 }
 
-void EpidemySimulator::checkGrid(int agentIndex1, std::mt19937 &mt, std::uniform_real_distribution<double> &rnd) {
+void EpidemySimulator::checkGrid(int agentIndex1, int n, std::mt19937 &mt, std::uniform_real_distribution<double> &rnd) {
     auto& agent1 = this->agents[agentIndex1];
     
     int gridIndex = this->grid.getGridCaseIndex(agent1.getPositionX(), agent1.getPositionY());
@@ -109,7 +109,7 @@ void EpidemySimulator::checkGrid(int agentIndex1, std::mt19937 &mt, std::uniform
                     continue;
                 }
                 auto& agent2 = this->agents[agentIndex2];
-                tryInfect(agent1, agent2, mt, rnd);
+                tryInfect(agent1, agent2, n, mt, rnd);
             }
         }
     }
@@ -129,33 +129,33 @@ void EpidemySimulator::step(double timeInSeconds) {
         int n = (int) (this->timeTriggerContaminationStep / TIME_CONTAMINATION_TRIGGER);
         this->timeTriggerContaminationStep -= n * TIME_CONTAMINATION_TRIGGER;
 
-        for (int k = 0; k < n; ++k) {
-            // compute infections: grid
-            for (int agentIndex1 = 0; agentIndex1 < this->getNumberOfAgents(); ++agentIndex1) {
-                auto& agent1 = this->agents[agentIndex1];
+        // compute infections: grid
+        for (int agentIndex1 = 0; agentIndex1 < this->getNumberOfAgents(); ++agentIndex1) {
+            auto& agent1 = this->agents[agentIndex1];
 
-                if (agent1.getState() == AgentState::AGENT_INFECTED) {
-                // check agents inside the grid
-                    checkGrid(agentIndex1, mt, rnd);
+            if (agent1.getState() == AgentState::AGENT_INFECTED) {
+            // check agents inside the grid
+                checkGrid(agentIndex1, n, mt, rnd);
+            }
+
+            if (agent1.getState() == AgentState::AGENT_INFECTED) {
+                double r = rnd(mt);
+                // heal/immune/death
+
+                // compute probabilities according to n
+
+                if (r <= this->virusCharacteristics.get_p_heal(n)) {
+                    // heals
+                    agent1.heal(false);
+                    agentAddToGrid.push_back(agentIndex1);
                 }
-
-                if (agent1.getState() == AgentState::AGENT_INFECTED) {
-                    double r = rnd(mt);
-                    // heal/immune/death
-
-                    if (r <= this->virusCharacteristics.get_p_heal()) {
-                        // heals
-                        agent1.heal(false);
-                        agentAddToGrid.push_back(agentIndex1);
-                    }
-                    else if (r <= this->virusCharacteristics.get_p_immune() + this->virusCharacteristics.get_p_heal()) {
-                        // gets immunized
-                        agent1.heal(true);
-                    }
-                    else if (r <= this->virusCharacteristics.get_p_death() + this->virusCharacteristics.get_p_immune() + this->virusCharacteristics.get_p_heal()) {
-                        // dies
-                        agent1.die();
-                    }
+                else if (r <= this->virusCharacteristics.get_p_immune(n) + this->virusCharacteristics.get_p_heal(n)) {
+                    // gets immunized
+                    agent1.heal(true);
+                }
+                else if (r <= this->virusCharacteristics.get_p_death(n) + this->virusCharacteristics.get_p_immune(n) + this->virusCharacteristics.get_p_heal(n)) {
+                    // dies
+                    agent1.die();
                 }
             }
         }

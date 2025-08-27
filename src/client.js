@@ -11,12 +11,12 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
 
     var DATA = {
         SPACE_WH: 500.0,
-        P_CONTAMINATION: 0.5,
-        CONTAMINATION_RADIUS: 10.0,
+        P_CONTAMINATION: 0.9,
+        CONTAMINATION_RADIUS: 50.0,
         P_HEAL: 0.05,
-        P_DEATH: 0.001,
+        P_DEATH: 0.5,
         P_IMMUNE: 0.005,
-        NUMBER_OF_AGENTS: 50000,
+        NUMBER_OF_AGENTS: 5000,
         AGENTS_SPEED_PER_SECONDS: 150.0,
         NUMBER_OF_INFECTED: 10,
         NUMBER_OF_IMMUNE: 2
@@ -67,10 +67,20 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
         epidemy.step(ticker.deltaMS / 1000);
 
         for (let index = 0; index < numberOfAgents; index++) {
-            sprites[index].x = epidemy.getAgentX(index) / (DATA.SPACE_WH / 500.0);
-            sprites[index].y = epidemy.getAgentY(index) / (DATA.SPACE_WH / 500.0);
+            if (sprites[index] != null) {
+                let state = epidemy.getAgentState(index);
 
-            sprites[index].tint = AGENT_COLORS[epidemy.getAgentState(index)] ?? 0xffffff;
+                if (state != AGENT.DEAD) {
+                    sprites[index].x = epidemy.getAgentX(index) / (DATA.SPACE_WH / 500.0);
+                    sprites[index].y = epidemy.getAgentY(index) / (DATA.SPACE_WH / 500.0);
+
+                    sprites[index].tint = AGENT_COLORS[state] ?? 0xffffff;
+                }
+                else {
+                    container.removeChild(sprites[index]);
+                    sprites[index] = null;
+                }
+            }
         }
     });
 })();

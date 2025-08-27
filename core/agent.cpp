@@ -58,6 +58,8 @@ double Agent::getSpeedY() {
 }
 
 void Agent::step(double timeInSeconds, double bounds_x, double bounds_y) {
+    if (this->getState() == AgentState::AGENT_DEAD) return;
+    
     this->state = this->stateBuffer;
 
     // move

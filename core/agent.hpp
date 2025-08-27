@@ -34,6 +34,7 @@ public:
     double getSpeedY();
 
     AgentState getState();
+    AgentState getNextState();
 
     void step(double time, double bounds_width, double bounds_height);
 

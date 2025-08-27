@@ -72,6 +72,7 @@ int EpidemySimulator::getNumberOfAgents() {
 }
 
 void EpidemySimulator::tryInfect(Agent& agent1, Agent& agent2, std::mt19937 &mt, std::uniform_real_distribution<double> &rnd) {
+    if (agent2.getNextState() != AgentState::AGENT_HEALTHY) return; // clause 2.5
     if (rnd(mt) > this->virusCharacteristics.get_p_contamination()) return; // clause 4
     if (agent2.getState() != AgentState::AGENT_HEALTHY) return; // clause 2
     if (distance(agent1.getPositionX(), agent1.getPositionY(), 

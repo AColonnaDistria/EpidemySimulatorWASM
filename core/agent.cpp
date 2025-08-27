@@ -114,7 +114,7 @@ void Agent::step(double timeInSeconds, double bounds_x, double bounds_y) {
 }
 
 AgentState Agent::getState() {
-    return (AgentState) this->state;
+    return (AgentState)((int)this->state);
 }
 
 void Agent::infected() {
@@ -127,4 +127,8 @@ void Agent::heal(bool immunity) {
 
 void Agent::die() {
     this->stateBuffer = (int) AgentState::AGENT_DEAD;
+}
+
+AgentState Agent::getNextState() {
+    return (AgentState)((int)this->stateBuffer);
 }

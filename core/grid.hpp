@@ -23,6 +23,9 @@ public:
     int getGridCaseIndex(double x, double y);
     int getGridCaseIndexFromIJ(int i, int j);
 
+    int getGridCaseI(double x);
+    int getGridCaseJ(double y);
+
     void storeAgent(int agentIndex, std::vector<Agent>& agents);
 
     void updateAgent(int agentIndex, std::vector<Agent>& agents, int previousGridIndex);
@@ -33,6 +36,7 @@ public:
     double getCaseSize();
 
     std::vector<int>& getCaseAgentsIndexes(int i, int j);
+    std::vector<int>& getCaseAgentsIndexes(int gridIndex);
 };
 
 #endif

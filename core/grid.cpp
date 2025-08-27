@@ -1,5 +1,6 @@
 #include "grid.hpp"
 #include <algorithm>
+#include "agent.hpp"
 
 Grid::Grid() {}
 
@@ -20,10 +21,18 @@ Grid::Grid(double contaminationRadius, double boxSize_width, double boxSize_heig
 }
 
 int Grid::getGridCaseIndex(double x, double y) {
-    int i = std::min(this->grid_width  - 1, std::max(0, int(x / this->caseSize_wh)));
-    int j = std::min(this->grid_height - 1, std::max(0, int(y / this->caseSize_wh)));
+    int i = this->getGridCaseI(x);
+    int j = this->getGridCaseJ(y);
 
     return this->getGridCaseIndexFromIJ(i, j);
+}
+
+int Grid::getGridCaseI(double x) {
+    return std::min(this->grid_width - 1, std::max(0, int(x / this->caseSize_wh)));
+}
+
+int Grid::getGridCaseJ(double y) {
+    return std::min(this->grid_height - 1, std::max(0, int(y / this->caseSize_wh)));
 }
 
 int Grid::getGridCaseIndexFromIJ(int i, int j) {
@@ -43,8 +52,16 @@ void Grid::updateAgent(int agentIndex, std::vector<Agent>& agents, int previousG
     Agent& agent = agents[agentIndex];
 
     int grid_index = this->getGridCaseIndex(agent.getPositionX(), agent.getPositionY());
-    
-    if (grid_index != previousGridIndex) {
+    auto& oldCell = this->grid_cells[previousGridIndex];
+    auto& newCell = this->grid_cells[grid_index];
+
+    if (agent.getState() != AgentState::AGENT_HEALTHY) {
+        // erase
+        auto position = std::find(oldCell.begin(), oldCell.end(), agentIndex);
+        if (position != oldCell.end()) // if found
+            oldCell.erase(position);
+    }
+    else if (grid_index != previousGridIndex) {
         auto& oldCell = this->grid_cells[previousGridIndex];
         auto& newCell = this->grid_cells[grid_index];
 
@@ -69,4 +86,8 @@ double Grid::getCaseSize() {
 
 std::vector<int>& Grid::getCaseAgentsIndexes(int i, int j){
     return this->grid_cells[this->getGridCaseIndexFromIJ(i, j)];
+}
+
+std::vector<int>& Grid::getCaseAgentsIndexes(int gridIndex) {
+    return this->grid_cells[gridIndex];
 }

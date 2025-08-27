@@ -109,8 +109,6 @@ void Agent::step(double timeInSeconds, double bounds_x, double bounds_y) {
 
     this->x = x2;
     this->y = y2;
-
-    printf("%f\n", speed);
 }
 
 AgentState Agent::getState() {

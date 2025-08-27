@@ -4,6 +4,7 @@
 #include "agent.hpp"
 #include "virus_characteristics.hpp"
 
+#include "random_obj.hpp"
 #include "common.hpp"
 
 //#define P_CONTAMINATION 0.25
@@ -21,20 +22,14 @@ EpidemySimulator::EpidemySimulator(double boxSize_width, double boxSize_height, 
 }
 
 void EpidemySimulator::addRandomAgents(int numberOfAgents, double maxSpeedPerSeconds, int numberOfInfectedAgents, int numberOfImmuneAgents) {
-    std::random_device rd;
-    std::mt19937 mt(rd());
-    std::uniform_real_distribution<double> rnAngle(-MATH_PI, MATH_PI);
-    std::uniform_real_distribution<double> rnSpeed(maxSpeedPerSeconds * 0.75, maxSpeedPerSeconds);
-
-    std::uniform_real_distribution<double> rnPositionX(0.0, this->boxSize_width);
-    std::uniform_real_distribution<double> rnPositionY(0.0, this->boxSize_height);
+    RandomObj::initializeRandom(-0.05, maxSpeedPerSeconds * 0.75, maxSpeedPerSeconds, this->boxSize_width, this->boxSize_height);
     
     for (int i = 0; i < numberOfAgents; ++i) {
-        double angle = rnAngle(mt);
-        double speed = rnSpeed(mt);
+        double angle = RandomObj::getRandomAngle();
+        double speed = RandomObj::getRandomSpeed();
 
-        double x = rnPositionX(mt);
-        double y = rnPositionY(mt);
+        double x = RandomObj::getRandomPositionX();
+        double y = RandomObj::getRandomPositionY();
 
         double vx = cos(angle) * speed;
         double vy = sin(angle) * speed;
@@ -71,8 +66,8 @@ int EpidemySimulator::getNumberOfAgents() {
     return this->agents.size();
 }
 
-void EpidemySimulator::tryInfect(Agent& agent1, Agent& agent2, int n, std::mt19937 &mt, std::uniform_real_distribution<double> &rnd) {
-    if (rnd(mt) > this->virusCharacteristics.get_p_contamination(n)) return; // clause 4
+void EpidemySimulator::tryInfect(Agent& agent1, Agent& agent2, int n) {
+    if (RandomObj::random() > this->virusCharacteristics.get_p_contamination(n)) return; // clause 4
     if (agent2.getNextState() != AgentState::AGENT_HEALTHY) return; // clause 2.5
     if (agent2.getState() != AgentState::AGENT_HEALTHY) return; // clause 2
     if (distance(agent1.getPositionX(), agent1.getPositionY(), 
@@ -83,7 +78,7 @@ void EpidemySimulator::tryInfect(Agent& agent1, Agent& agent2, int n, std::mt199
     agent2.infected();
 }
 
-void EpidemySimulator::checkGrid(int agentIndex1, int n, std::mt19937 &mt, std::uniform_real_distribution<double> &rnd) {
+void EpidemySimulator::checkGrid(int agentIndex1, int n) {
     auto& agent1 = this->agents[agentIndex1];
     
     int gridIndex = this->grid.getGridCaseIndex(agent1.getPositionX(), agent1.getPositionY());
@@ -109,19 +104,14 @@ void EpidemySimulator::checkGrid(int agentIndex1, int n, std::mt19937 &mt, std::
                     continue;
                 }
                 auto& agent2 = this->agents[agentIndex2];
-                tryInfect(agent1, agent2, n, mt, rnd);
+                tryInfect(agent1, agent2, n);
             }
         }
     }
-    //resolveHealth(agent1, mt, rnd);
 }
 
 void EpidemySimulator::step(double timeInSeconds) {
     this->timeTriggerContaminationStep += timeInSeconds;
-
-    std::random_device rd;
-    std::mt19937 mt(rd());
-    std::uniform_real_distribution<double> rnd(0.0, 1.0);
 
     std::vector<int> agentAddToGrid;
 
@@ -135,11 +125,11 @@ void EpidemySimulator::step(double timeInSeconds) {
 
             if (agent1.getState() == AgentState::AGENT_INFECTED) {
             // check agents inside the grid
-                checkGrid(agentIndex1, n, mt, rnd);
+                checkGrid(agentIndex1, n);
             }
 
             if (agent1.getState() == AgentState::AGENT_INFECTED) {
-                double r = rnd(mt);
+                double r = RandomObj::random();
                 // heal/immune/death
 
                 // compute probabilities according to n

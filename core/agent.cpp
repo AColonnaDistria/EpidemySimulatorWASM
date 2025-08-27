@@ -1,5 +1,6 @@
 #include "common.hpp"
 #include "agent.hpp"
+#include "random_obj.hpp"
 
 #include <random>
 
@@ -69,11 +70,7 @@ void Agent::step(double timeInSeconds, double bounds_x, double bounds_y) {
     double speed = sqrt(xspeed * xspeed + yspeed * yspeed);
     double angle = atan2(yspeed, xspeed);
 
-    std::random_device rd;
-    std::mt19937 mt(rd());
-    std::uniform_real_distribution<double> rnAngle(-0.05 * MATH_PI, 0.05 * MATH_PI);
-
-    angle += rnAngle(mt);
+    angle += RandomObj::getRandomAngleDeviation();
 
     xspeed = cos(angle) * speed;
     yspeed = sin(angle) * speed;

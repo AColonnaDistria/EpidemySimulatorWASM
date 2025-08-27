@@ -10,15 +10,15 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
     };
 
     var DATA = {
-        SPACE_WH: 500.0,
-        P_CONTAMINATION: 0.015,
-        CONTAMINATION_RADIUS: 20.0,
+        SPACE_WH: 1500.0,
+        P_CONTAMINATION: 0.15,
+        CONTAMINATION_RADIUS: 100.0,
         P_HEAL: 0.05,
-        P_DEATH: 0.01,
+        P_DEATH: 0.1,
         P_IMMUNE: 0.005,
-        NUMBER_OF_AGENTS: 1000,
-        AGENTS_SPEED_PER_SECONDS: 150.0,
-        NUMBER_OF_INFECTED: 10,
+        NUMBER_OF_AGENTS: 5000,
+        AGENTS_SPEED_PER_SECONDS: 1500.0,
+        NUMBER_OF_INFECTED: 10000,
         NUMBER_OF_IMMUNE: 2
     };
 

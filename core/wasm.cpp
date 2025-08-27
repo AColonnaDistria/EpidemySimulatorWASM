@@ -1,11 +1,14 @@
 #include <emscripten/emscripten.h>
 
 #include "epidemy.hpp"
+#include "random_obj.hpp"
 
 static EpidemySimulator* simulator = nullptr;
 
 extern "C" {
     EMSCRIPTEN_KEEPALIVE void create_simulator(double width, double height, double p_contamination, double radius_contamination, double p_heal, double p_death, double p_immune) {
+        RandomObj::initializeRandom(-0.05, 0.0, 0.0, width, height);
+        
         simulator = new EpidemySimulator(width, height, VirusCharacteristics(p_contamination, radius_contamination, p_heal, p_death, p_immune));
     }
 

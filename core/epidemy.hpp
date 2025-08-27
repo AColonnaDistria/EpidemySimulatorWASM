@@ -19,8 +19,8 @@ class EpidemySimulator {
 
     double timeTriggerContaminationStep;
 private:
-    void checkGrid(int agentIndex1, int n, std::mt19937 &mt, std::uniform_real_distribution<double> &rnd);
-    void tryInfect(Agent& agent1, Agent& agent2, int n, std::mt19937 &mt, std::uniform_real_distribution<double> &rnd);
+    void checkGrid(int agentIndex1, int n);
+    void tryInfect(Agent& agent1, Agent& agent2, int n);
 public:
     EpidemySimulator(double boxSize_width, double boxSize_height, VirusCharacteristics virus);
     void addRandomAgents(int numberOfAgents, double maxSpeedPerSeconds, int numberOfInfectedAgents = 0, int numberOfImmuneAgents = 0);

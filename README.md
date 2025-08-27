@@ -14,7 +14,7 @@ source ~/emsdk/emsdk_env.sh
 then compile the project
 
 ```bash
-emcc --no-entry -O3 core/agent.cpp core/epidemy.cpp core/virus_characteristics.cpp core/wasm.cpp  -o src/wasm/epidemy.js -s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORTED_RUNTIME_METHODS='["cwrap","HEAPF64","HEAP32","HEAPU8"]'
+emcc --no-entry -O3 core/agent.cpp core/epidemy.cpp core/virus_characteristics.cpp core/wasm.cpp core/random_obj.cpp -o src/wasm/epidemy.js -s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORTED_RUNTIME_METHODS='["cwrap","HEAPF64","HEAP32","HEAPU8"]'
 ```
 
 2. Launch the server with vite.js

@@ -16,6 +16,8 @@ EpidemySimulator::EpidemySimulator(double boxSize_width, double boxSize_height, 
     this->boxSize_height = boxSize_height;
 
     this->virusCharacteristics = virus;
+
+    this->grid = Grid(virus.get_radius_contamination(), boxSize_width, boxSize_height);
 }
 
 void EpidemySimulator::addRandomAgents(int numberOfAgents, double maxSpeedPerSeconds, int numberOfInfectedAgents, int numberOfImmuneAgents) {
@@ -45,6 +47,8 @@ void EpidemySimulator::addRandomAgents(int numberOfAgents, double maxSpeedPerSec
             state = AgentState::AGENT_IMMUNE;
 
         this->agents.push_back(Agent(x, y, vx, vy, state));
+        int agentIndex = this->agents.size() - 1;
+        this->grid.storeAgent(agentIndex, this->agents);
     }
 }
 
@@ -67,6 +71,71 @@ int EpidemySimulator::getNumberOfAgents() {
     return this->agents.size();
 }
 
+void EpidemySimulator::tryInfect(Agent& agent1, Agent& agent2, std::mt19937 &mt, std::uniform_real_distribution<double> &rnd) {
+    if (rnd(mt) > this->virusCharacteristics.get_p_contamination()) return; // clause 4
+    if (agent2.getState() != AgentState::AGENT_HEALTHY) return; // clause 2
+    if (distance(agent1.getPositionX(), agent1.getPositionY(), 
+                 agent2.getPositionX(), agent2.getPositionY())
+        > this->virusCharacteristics.get_radius_contamination()) return;
+
+    // then agent2 gets infected
+    agent2.infected();
+}
+
+void EpidemySimulator::resolveHealth(Agent& agent1, std::mt19937 &mt, std::uniform_real_distribution<double> &rnd) {
+    if (agent1.getState() == AgentState::AGENT_INFECTED) {
+        double r = rnd(mt);
+        // heal/immune/death
+
+        if (r <= this->virusCharacteristics.get_p_heal()) {
+            // heals
+            agent1.heal(false);
+        }
+        else if (r <= this->virusCharacteristics.get_p_immune() + this->virusCharacteristics.get_p_heal()) {
+            // gets immunized
+            agent1.heal(true);
+        }
+        else if (r <= this->virusCharacteristics.get_p_death() + this->virusCharacteristics.get_p_immune() + this->virusCharacteristics.get_p_heal()) {
+            // dies
+            agent1.die();
+        }
+    }
+}
+
+void EpidemySimulator::checkGrid(int i, int j, std::mt19937 &mt, std::uniform_real_distribution<double> &rnd) {
+    for (int agentIndex: this->grid.getCaseAgentsIndexes(i, j)) {
+        auto& agent1 = this->agents[agentIndex];
+
+        // if clause 1
+        if (agent1.getState() != AgentState::AGENT_INFECTED) {
+            continue;
+        }
+        // then check neighbors
+        for (int gi = -1; gi <= 1; ++gi) {
+            for (int gj = -1; gj <= 1; ++gj) {
+                // check bounds
+                int ni = i+gi;
+                int nj = j+gj;
+
+                if (ni < 0 || ni >= this->grid.getGridWidth()
+                ||  nj < 0 || nj >= this->grid.getGridHeight()) {
+                    continue;
+                }
+            
+                for (int agentIndex2: this->grid.getCaseAgentsIndexes(ni, nj)) {
+                    // doesn't try to autoinfect
+                    if (agentIndex == agentIndex2) {
+                        continue;
+                    }
+                    auto& agent2 = this->agents[agentIndex2];
+                    tryInfect(agent1, agent2, mt, rnd);
+                }
+            }
+        }
+        resolveHealth(agent1, mt, rnd);
+    }
+}
+
 void EpidemySimulator::step(double timeInSeconds) {
     this->timeTriggerContaminationStep += timeInSeconds;
 
@@ -79,43 +148,26 @@ void EpidemySimulator::step(double timeInSeconds) {
         this->timeTriggerContaminationStep -= n * TIME_CONTAMINATION_TRIGGER;
 
         for (int k = 0; k < n; ++k) {
-            // compute infections: naive implementation
-            for (int i = 0; i < agents.size(); ++i) {
-                for (int j = 0; j < agents.size(); ++j) {
-                    // A -> B
-                    if (i != j) {
-                        // if A is infected and B is healthy then there is a p_contamination probability that a contamination happens
-                        if (agents[i].getState() == AgentState::AGENT_INFECTED 
-                        && agents[j].getState() == AgentState::AGENT_HEALTHY 
-                        && (distance(agents[i].getPositionX(), agents[i].getPositionY(), agents[j].getPositionX(), agents[j].getPositionY()) <= this->virusCharacteristics.get_radius_contamination())
-                        && rnd(mt) <= this->virusCharacteristics.get_p_contamination()) {
-                            agents[j].infected();
-                        }
-                    }
-                }
-
-                if (agents[i].getState() == AgentState::AGENT_INFECTED) {
-                    double r = rnd(mt);
-                    // heal/immune/death
-
-                    if (r <= this->virusCharacteristics.get_p_heal()) {
-                        // heals
-                        agents[i].heal(false);
-                    }
-                    else if (r <= this->virusCharacteristics.get_p_immune() + this->virusCharacteristics.get_p_heal()) {
-                        // gets immunized
-                        agents[i].heal(true);
-                    }
-                    else if (r <= this->virusCharacteristics.get_p_death() + this->virusCharacteristics.get_p_immune() + this->virusCharacteristics.get_p_heal()) {
-                        // dies
-                        agents[i].die();
-                    }
+            // compute infections: grid
+            for (int i = 0; i < this->grid.getGridWidth(); ++i) {
+                for (int j = 0; j < this->grid.getGridHeight(); ++j) {
+                    // check agents inside the grid
+                    checkGrid(i, j, mt, rnd);
                 }
             }
         }
     }
     // advance and apply infections
-    for (auto& agent: agents) {
-        agent.step(timeInSeconds, this->boxSize_width, this->boxSize_height);
+    for (int i = 0; i < this->grid.getGridWidth(); ++i) {
+        for (int j = 0; j < this->grid.getGridHeight(); ++j) {
+            int oldGridIndex = this->grid.getGridCaseIndexFromIJ(i, j);
+
+            for (int agentIndex: this->grid.getCaseAgentsIndexes(i, j)) {
+                auto& agent = this->agents[agentIndex];
+
+                agent.step(timeInSeconds, this->boxSize_width, this->boxSize_height);
+                this->grid.updateAgent(agentIndex, this->agents, oldGridIndex);
+            }
+        }
     }
 }

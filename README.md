@@ -1,8 +1,15 @@
 Requirements:
-* node.js
+* vite version:>1.0.1
 * pixi.js version:>8.12.0
-* emcc
-* vite.js
+* emcc version:>4.0.13
+
+Installation:
+```
+npm install vite pixi.js
+git clone https://github.com/emscripten-core/emsdk.git && cd emsdk
+./emsdk install latest
+./emsdk activate latest
+```
 
 Steps for local deployment:
 1. Compile the project to WebAssembly
@@ -14,7 +21,7 @@ source ~/emsdk/emsdk_env.sh
 then compile the project
 
 ```bash
-emcc --no-entry -O3 core/*.cpp -o src/wasm/epidemy.js -s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORTED_RUNTIME_METHODS='["cwrap","HEAPF64","HEAP32","HEAPU8"]'
+emcc --no-entry -O3 core/*.cpp -o src/wasm/epidemy.js -s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORTED_RUNTIME_METHODS='["cwrap","HEAPF64","HEAP32","HEAPU8"] -s ALLOW_MEMORY_GROWTH=1'
 ```
 
 2. Launch the server with vite.js
@@ -22,15 +29,4 @@ emcc --no-entry -O3 core/*.cpp -o src/wasm/epidemy.js -s MODULARIZE=1 -s EXPORT_
 npx vite
 ```
 
-and open in the browser 
-
-Remarks:
-If you need a lot of agents, you can increase the memory size (eg 128MB) available
-```bash
-emcc --no-entry -O3 core/*.cpp -o src/wasm/epidemy.js -s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORTED_RUNTIME_METHODS='["cwrap","HEAPF64","HEAP32","HEAPU8"] -s INITIAL_MEMORY=128MB'
-```
-
-or make it expand at runtime
-```bash
-emcc --no-entry -O3 core/*.cpp -o src/wasm/epidemy.js -s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORTED_RUNTIME_METHODS='["cwrap","HEAPF64","HEAP32","HEAPU8"] -s ALLOW_MEMORY_GROWTH=1'
-```
+and open it in the browser at the address indicated.

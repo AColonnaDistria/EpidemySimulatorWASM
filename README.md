@@ -13,7 +13,7 @@ git clone https://github.com/emscripten-core/emsdk.git && cd emsdk
 
 Steps for local deployment:
 1. Compile the project to WebAssembly
-First load the environment variables of emscripten:
+Load the environment variables of emscripten:
 ```bash
 source ~/emsdk/emsdk_env.sh
 ```
@@ -29,4 +29,4 @@ emcc --no-entry -O3 core/*.cpp -o src/wasm/epidemy.js -s MODULARIZE=1 -s EXPORT_
 npx vite
 ```
 
-and open it in the browser at the address indicated.
+and open it in the browser at the address specified.

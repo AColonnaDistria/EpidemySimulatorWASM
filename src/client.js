@@ -11,14 +11,14 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
 
     var DATA = {
         SPACE_WH: 500.0,
-        P_CONTAMINATION: 0.05,
-        CONTAMINATION_RADIUS: 10.0,
+        P_CONTAMINATION: 0.015,
+        CONTAMINATION_RADIUS: 20.0,
         P_HEAL: 0.05,
-        P_DEATH: 0.001,
+        P_DEATH: 0.01,
         P_IMMUNE: 0.005,
-        NUMBER_OF_AGENTS: 500,
+        NUMBER_OF_AGENTS: 1000,
         AGENTS_SPEED_PER_SECONDS: 150.0,
-        NUMBER_OF_INFECTED: 20,
+        NUMBER_OF_INFECTED: 10,
         NUMBER_OF_IMMUNE: 2
     };
 

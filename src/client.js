@@ -2,10 +2,12 @@ import * as epidemy from './epidemyMethods.js';
 import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.js';
 
 (async () => {
-    var AGENT_HEALTHY = 0;
-    var AGENT_INFECTED = 1;
-    var AGENT_IMMUNE = 2;
-    var AGENT_DEAD = 3;
+    var AGENT = {
+        HEALTHY: 0,
+        INFECTED: 1,
+        IMMUNE: 2,
+        DEAD: 3
+    };
 
     var DATA = {
         SPACE_WH: 500.0,
@@ -21,10 +23,10 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
     };
 
     const AGENT_COLORS = {
-        [AGENT_HEALTHY]: 0xffff00,
-        [AGENT_INFECTED]: 0x008000,
-        [AGENT_IMMUNE]:  0xffc0cb,
-        [AGENT_DEAD]:    0xc4c4c4,
+        [AGENT.HEALTHY]: 0xffff00,
+        [AGENT.INFECTED]: 0x008000,
+        [AGENT.IMMUNE]:  0xffc0cb,
+        [AGENT.DEAD]:    0xc4c4c4,
     }
 
     const epidemy_container = document.getElementById("epidemy_container");
@@ -40,7 +42,7 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
     app.stage.addChild(container);
 
     const circleGfx = new Graphics()
-        .circle(0, 0, 5.0)
+        .circle(0, 0, 5.0 / (DATA.SPACE_WH / 500.0))
         .fill(0xffffff);
 
     const circleTexture = app.renderer.generateTexture(circleGfx);
@@ -48,8 +50,8 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
     const numberOfAgents = epidemy.getNumberOfAgents();
 
     for (let index = 0; index < numberOfAgents; index++) {
-        const x = epidemy.getAgentX(index);
-        const y = epidemy.getAgentY(index);
+        const x = epidemy.getAgentX(index) / (DATA.SPACE_WH / 500.0);
+        const y = epidemy.getAgentY(index) / (DATA.SPACE_WH / 500.0);
 
         const sprite = new Sprite(circleTexture);
         sprite.x = x;
@@ -65,8 +67,8 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
         epidemy.step(ticker.deltaMS / 1000);
 
         for (let index = 0; index < numberOfAgents; index++) {
-            sprites[index].x = epidemy.getAgentX(index);
-            sprites[index].y = epidemy.getAgentY(index);
+            sprites[index].x = epidemy.getAgentX(index) / (DATA.SPACE_WH / 500.0);
+            sprites[index].y = epidemy.getAgentY(index) / (DATA.SPACE_WH / 500.0);
 
             sprites[index].tint = AGENT_COLORS[epidemy.getAgentState(index)] ?? 0xffffff;
         }

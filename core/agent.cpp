@@ -59,15 +59,13 @@ double Agent::getSpeedY() {
 
 void Agent::step(double timeInSeconds, double bounds_x, double bounds_y) {
     if (this->getState() == AgentState::AGENT_DEAD) return;
-    
+
     this->state = this->stateBuffer;
 
     // move
     double xspeed = this->vx;
     double yspeed = this->vy;
 
-    double speed = sqrt(xspeed * xspeed + yspeed * yspeed);
-    /*
     double speed = sqrt(xspeed * xspeed + yspeed * yspeed);
     double angle = atan2(yspeed, xspeed);
 
@@ -79,7 +77,6 @@ void Agent::step(double timeInSeconds, double bounds_x, double bounds_y) {
 
     xspeed = cos(angle) * speed;
     yspeed = sin(angle) * speed;
-    */
 
     double x2 = this->x + xspeed * timeInSeconds;
     double y2 = this->y + yspeed * timeInSeconds;

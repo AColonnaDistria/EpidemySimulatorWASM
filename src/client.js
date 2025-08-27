@@ -7,6 +7,19 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
     var AGENT_IMMUNE = 2;
     var AGENT_DEAD = 3;
 
+    var DATA = {
+        SPACE_WH: 500.0,
+        P_CONTAMINATION: 0.5,
+        CONTAMINATION_RADIUS: 10.0,
+        P_HEAL: 0.05,
+        P_DEATH: 0.001,
+        P_IMMUNE: 0.005,
+        NUMBER_OF_AGENTS: 500,
+        AGENTS_SPEED_PER_SECONDS: 150.0,
+        NUMBER_OF_INFECTED: 10,
+        NUMBER_OF_IMMUNE: 2
+    };
+
     const AGENT_COLORS = {
         [AGENT_HEALTHY]: 0xffff00,
         [AGENT_INFECTED]: 0x008000,
@@ -16,8 +29,8 @@ import { Application, Assets, Container, Graphics, Sprite, Circle } from 'pixi.j
 
     const epidemy_container = document.getElementById("epidemy_container");
 
-    epidemy.create_simulator(500.0, 500.0, 0.05, 30.0);
-    epidemy.add_random_agents(50, 150.0, 10, 2);
+    epidemy.createSimulator(DATA);
+    epidemy.addRandomAgents(DATA);
 
     const app = new Application();
     await app.init({ background: 'white', resizeTo: epidemy_container });

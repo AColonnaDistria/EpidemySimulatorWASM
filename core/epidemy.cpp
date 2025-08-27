@@ -144,7 +144,7 @@ void EpidemySimulator::step(double timeInSeconds) {
     std::uniform_real_distribution<double> rnd(0.0, 1.0);
 
     if (this->timeTriggerContaminationStep >= TIME_CONTAMINATION_TRIGGER) {
-        int n = (int) (this->timeTriggerContaminationStep / TIME_CONTAMINATION_TRIGGER);
+        int n = 1; // (int) (this->timeTriggerContaminationStep / TIME_CONTAMINATION_TRIGGER);
         this->timeTriggerContaminationStep -= n * TIME_CONTAMINATION_TRIGGER;
 
         for (int k = 0; k < n; ++k) {
@@ -158,14 +158,17 @@ void EpidemySimulator::step(double timeInSeconds) {
         }
     }
     // advance and apply infections
+    for (auto& agent: this->agents) {
+        agent.step(timeInSeconds, this->boxSize_width, this->boxSize_height);
+    }
+
+    // update grids
     for (int i = 0; i < this->grid.getGridWidth(); ++i) {
         for (int j = 0; j < this->grid.getGridHeight(); ++j) {
             int oldGridIndex = this->grid.getGridCaseIndexFromIJ(i, j);
 
             for (int agentIndex: this->grid.getCaseAgentsIndexes(i, j)) {
                 auto& agent = this->agents[agentIndex];
-
-                agent.step(timeInSeconds, this->boxSize_width, this->boxSize_height);
                 this->grid.updateAgent(agentIndex, this->agents, oldGridIndex);
             }
         }

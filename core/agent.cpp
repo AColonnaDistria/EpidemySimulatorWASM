@@ -65,6 +65,8 @@ void Agent::step(double timeInSeconds, double bounds_x, double bounds_y) {
     double yspeed = this->vy;
 
     double speed = sqrt(xspeed * xspeed + yspeed * yspeed);
+    /*
+    double speed = sqrt(xspeed * xspeed + yspeed * yspeed);
     double angle = atan2(yspeed, xspeed);
 
     std::random_device rd;
@@ -75,29 +77,31 @@ void Agent::step(double timeInSeconds, double bounds_x, double bounds_y) {
 
     xspeed = cos(angle) * speed;
     yspeed = sin(angle) * speed;
+    */
 
     double x2 = this->x + xspeed * timeInSeconds;
     double y2 = this->y + yspeed * timeInSeconds;
 
+    // Fixing bouncing
     if (x2 < 0)
     {
-        xspeed *= -1.0;
-        x2 = 1.0;
+        xspeed = -xspeed;
+        x2 = -x2;
     }
     if (y2 < 0)
     {
-        yspeed *= -1.0;
-        y2 = 1.0;
+        yspeed = -yspeed;
+        y2 = -y2;
     }
     if (x2 >= bounds_x)
     {
-        xspeed *= -1.0;
-        x2 = bounds_x - 1.0;
+        xspeed = -xspeed;
+        x2 = 2.0 * bounds_x - x2;
     }
     if (y2 >= bounds_y)
     {
-        yspeed *= -1.0;
-        y2 = bounds_y - 1.0;
+        yspeed = -yspeed;
+        y2 = 2.0 * bounds_y - y2;
     }
 
     this->vx = xspeed;
@@ -105,6 +109,8 @@ void Agent::step(double timeInSeconds, double bounds_x, double bounds_y) {
 
     this->x = x2;
     this->y = y2;
+
+    printf("%f\n", speed);
 }
 
 AgentState Agent::getState() {

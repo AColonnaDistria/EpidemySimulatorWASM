@@ -3,7 +3,7 @@ import wasmUrl from './wasm/epidemy.wasm?url';
 
 const Module = await createModule({
     locateFile: () =>  wasmUrl,
-    print: (s) => (document.getElementById('out').textContent += s + '\n'),
+    print: (s) => console.log(s),
     printErr: (s) => console.error(s),
 });
 

@@ -16,12 +16,30 @@ extern "C" {
         simulator->addRandomAgents(numberOfAgents, maxSpeedPerSeconds, numberOfInfected, numberOfImmune);
     }
 
+    EMSCRIPTEN_KEEPALIVE void set_virus_characteristics(
+        double P_CONTAMINATION, 
+        double CONTAMINATION_RADIUS,
+        double P_HEAL,
+        double P_DEATH,
+        double P_IMMUNE) {
+        
+        simulator->getVirusCharacteristics().set_p_contamination(P_CONTAMINATION);
+        simulator->getVirusCharacteristics().set_radius_contamination(CONTAMINATION_RADIUS);
+        simulator->getVirusCharacteristics().set_p_heal(P_HEAL);
+        simulator->getVirusCharacteristics().set_p_death(P_DEATH);
+        simulator->getVirusCharacteristics().set_p_immune(P_IMMUNE);
+    }
+
     EMSCRIPTEN_KEEPALIVE Agent* get_agents_raw() {
         return simulator->getAgents().data();
     }
 
     EMSCRIPTEN_KEEPALIVE int getNumberOfAgents() {
         return simulator->getNumberOfAgents();
+    }
+
+    EMSCRIPTEN_KEEPALIVE EpidemyStatistics* getStatsPtr() {
+        return simulator->getEpidemyStatisticsPtr();
     }
 
     EMSCRIPTEN_KEEPALIVE double getAgentX(int index) {

@@ -4,10 +4,73 @@
         <meta charset="UTF8"/>
         <title> Epidemy Simulator </title>
         <link rel="stylesheet" href="/stylesheet.css">
+        <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script defer src="/src/client.js" type="module"></script>
     </head>
     <body>
-        <header></header>
-        <div id="epidemy_container"></div>
+        <div id="left_pane">
+            <div id="epidemy_container"></div>
+            <canvas id="chart_container"></canvas>
+        </div>
+
+        <div id="right_pane">
+            <div class="range-element"> 
+                <label>Number of agents: </label>
+                <input class="var-range-agents" id="number-of-agents-range" type="range">
+            </div>
+
+            <div class="range-element"> 
+                <label>Number of infected: </label>
+                <input class="var-range-agents" id="number-of-infected-range" type="range">
+            </div>
+
+            <div class="range-element"> 
+                <label>Number of immune: </label>
+                <input class="var-range-agents" id="number-of-immune-range" type="range">
+            </div>
+
+
+            <div class="range-element"> 
+                <label>Agent speed: </label>
+                <input class="var-range-agents" id="agent-speed-range" type="range">
+            </div>
+
+            <div class="range-element"> 
+                <label>Contamination probability: </label>
+                <input class="var-range" id="contamination-probability-range" type="range">
+            </div>
+
+            <div class="range-element"> 
+                <label>Contamination radius: </label>
+                <input class="var-range" id="contamination-radius-range" type="range">
+            </div>
+
+            <div class="range-element"> 
+                <label>Healing probability: </label>
+                <input class="var-range" id="healing-probability-range" type="range">
+            </div>
+
+            <div class="range-element"> 
+                <label>Death probability: </label>
+                <input class="var-range" id="death-probability-range" type="range">
+            </div>
+
+            <div class="range-element"> 
+                <label>Immunity probability: </label>
+                <input class="var-range" id="immunity-probability-range" type="range">
+            </div>
+
+            <div class="range-element">
+                <button id="play-button">▶</button>
+            </div>
+
+            <div class="range-element">
+                <button id="pause-button">||</button>
+            </div>
+
+            <div class="range-element">
+                <button id="restart-button">↻</button>
+            </div>
+        </div>
     </body>
 </html>

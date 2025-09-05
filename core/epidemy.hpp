@@ -5,19 +5,21 @@
 #include "agent.hpp"
 #include "grid.hpp"
 #include "virus_characteristics.hpp"
+#include "epidemy_statistics.hpp"
 
 #include <vector>
 #include <random>
 
 class EpidemySimulator {
     std::vector<Agent> agents;
+    EpidemyStatistics epidemyStats;
     Grid grid;
 
     double boxSize_width;
     double boxSize_height;
     VirusCharacteristics virusCharacteristics;
 
-    double timeTriggerContaminationStep;
+    double timeTriggerContaminationStep;    
 private:
     void checkGrid(int agentIndex1, int n);
     void tryInfect(Agent& agent1, Agent& agent2, int n);
@@ -31,6 +33,12 @@ public:
 
     std::vector<Agent>& getAgents();
 
-    VirusCharacteristics getVirusCharacteristics();
+    VirusCharacteristics& getVirusCharacteristics();
+    VirusCharacteristics* getVirusCharacteristicsPtr();
+    void setVirusCharacteristics(VirusCharacteristics virusCharacteristics);
+
+    EpidemyStatistics getEpidemyStatistics();
+
+    EpidemyStatistics* getEpidemyStatisticsPtr();
 };
 #endif

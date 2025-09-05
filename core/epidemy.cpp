@@ -3,6 +3,7 @@
 #include "epidemy.hpp"
 #include "agent.hpp"
 #include "virus_characteristics.hpp"
+#include "epidemy_statistics.hpp"
 
 #include "random_obj.hpp"
 #include "common.hpp"
@@ -17,6 +18,7 @@ EpidemySimulator::EpidemySimulator(double boxSize_width, double boxSize_height, 
     this->boxSize_height = boxSize_height;
 
     this->virusCharacteristics = virus;
+    this->epidemyStats = EpidemyStatistics();
 
     this->grid = Grid(virus.get_radius_contamination(), boxSize_width, boxSize_height);
 }
@@ -45,6 +47,11 @@ void EpidemySimulator::addRandomAgents(int numberOfAgents, double maxSpeedPerSec
         int agentIndex = this->agents.size() - 1;
         this->grid.storeAgent(agentIndex, this->agents);
     }
+
+    this->epidemyStats.setHealthyNumberOfAgents(numberOfAgents - numberOfInfectedAgents - numberOfImmuneAgents);
+    this->epidemyStats.setInfectedNumberOfAgents(numberOfInfectedAgents);
+    this->epidemyStats.setImmuneNumberOfAgents(numberOfImmuneAgents);
+    this->epidemyStats.setDeadNumberOfAgents(0);
 }
 
 Agent EpidemySimulator::getAgent(int index) {
@@ -151,8 +158,11 @@ void EpidemySimulator::step(double timeInSeconds) {
         }
     }
     // advance and apply infections
+    
+    this->epidemyStats.clear();
     for (auto& agent: this->agents) {
         agent.step(timeInSeconds, this->boxSize_width, this->boxSize_height);
+        this->epidemyStats.count(agent);
     }
 
     // update grids
@@ -173,4 +183,24 @@ void EpidemySimulator::step(double timeInSeconds) {
 
         this->grid.updateAgent(agentIndex, this->agents, gridIndex);
     }
+}
+
+EpidemyStatistics EpidemySimulator::getEpidemyStatistics() {
+    return this->epidemyStats;
+}
+
+EpidemyStatistics* EpidemySimulator::getEpidemyStatisticsPtr() {
+    return &(this->epidemyStats);
+}
+
+VirusCharacteristics& EpidemySimulator::getVirusCharacteristics() {
+    return this->virusCharacteristics;
+}
+
+VirusCharacteristics* EpidemySimulator::getVirusCharacteristicsPtr() {
+    return &(this->virusCharacteristics);
+}
+
+void EpidemySimulator::setVirusCharacteristics(VirusCharacteristics virusCharacteristics) {
+    this->virusCharacteristics = virusCharacteristics;
 }

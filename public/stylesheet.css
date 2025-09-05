@@ -1,5 +1,50 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%; 
+}
+
+body {
+    display: flex;
+    flex-direction: row;
+}
+
+#left_pane {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+
+    width: 500px;
+    min-width: 300px; 
+    height: 100%;        /* full height of body */
+}
+
 #epidemy_container {
-    width: 505px;
-    height: 505px;
-    border: 1px solid gray;
+    width: 500px;
+    height: 500px;
+}
+
+#chart_container {
+    width: 500px;
+}
+
+#right_pane {
+    display: grid;
+    width: calc(100vw - 500px);
+    height: 50%;
+
+    place-items: start;
+    padding: 10px;
+
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.range-element {
+    display: flex;
+    flex-direction: column;
+
+    width: 250px;
+
+    text-align: center;
 }

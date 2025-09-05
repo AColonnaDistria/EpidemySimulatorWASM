@@ -17,6 +17,12 @@ public:
     double get_p_death();
     double get_p_immune();
 
+    void set_radius_contamination(double radius_contamination);
+    void set_p_contamination(double p_contamination);
+    void set_p_heal(double p_heal);
+    void set_p_death(double p_death);
+    void set_p_immune(double p_immune);
+
     double get_p_contamination(int n);
     double get_p_heal(int n);
     double get_p_death(int n);

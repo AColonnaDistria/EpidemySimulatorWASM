@@ -34,6 +34,26 @@ double VirusCharacteristics::get_p_heal() {
     return this->p_heal;
 }
 
+void VirusCharacteristics::set_radius_contamination(double radius_contamination) {
+    this->radius_contamination = radius_contamination;
+}
+
+void VirusCharacteristics::set_p_contamination(double p_contamination) {
+    this->p_contamination = p_contamination;
+}
+
+void VirusCharacteristics::set_p_death(double p_death) {
+    this->p_death = p_death;
+}
+
+void VirusCharacteristics::set_p_immune(double p_immune) {
+    this->p_immune = p_immune;
+}
+
+void VirusCharacteristics::set_p_heal(double p_heal) {
+    this->p_heal = p_heal;
+}
+
 double VirusCharacteristics::get_p_contamination(int n) {
     return 1.0 - pow(1.0 - this->p_contamination, n);
 }

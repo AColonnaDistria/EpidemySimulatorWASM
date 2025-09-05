@@ -21,7 +21,7 @@ source ~/emsdk/emsdk_env.sh
 then compile the project
 
 ```bash
-emcc --no-entry -O3 core/*.cpp -o src/wasm/epidemy.js -s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORTED_RUNTIME_METHODS='["cwrap","HEAPF64","HEAP32","HEAPU8"] -s ALLOW_MEMORY_GROWTH=1'
+emcc --no-entry -O3 core/*.cpp -o src/wasm/epidemy.js -s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORTED_RUNTIME_METHODS='["cwrap","HEAPF64","HEAP32","HEAPU8"]' -s ALLOW_MEMORY_GROWTH=1
 ```
 
 2. Launch the server with vite.js

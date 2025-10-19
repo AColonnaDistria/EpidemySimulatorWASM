@@ -2,6 +2,7 @@ Requirements:
 * vite version:>1.0.1
 * pixi.js version:>8.12.0
 * emcc version:>4.0.13
+* node.js version:>20.19
 
 Installation:
 ```

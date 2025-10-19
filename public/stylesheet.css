@@ -40,6 +40,12 @@ body {
     grid-template-columns: repeat(3, 1fr);
 }
 
+#time_buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
 .range-element {
     display: flex;
     flex-direction: column;

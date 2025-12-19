@@ -3,9 +3,9 @@
     "chart.js": "^4.5.0",
     "express": "^5.1.0",
     "nodejs": "^0.0.0",
-    "pixi.js": "^8.14.0"
+    "pixi.js": "^8.14.3"
   },
   "devDependencies": {
-    "vite": "^7.1.10"
+    "vite": "^7.3.0"
   }
 }
